@@ -1,0 +1,43 @@
+name: Generate E-Ink Dashboard Image
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Install Linux dependencies for Puppeteer / Chrome
+      - name: Install Chrome Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgbm-dev wget gnupg ca-certificates procps libxss1
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Render Screenshot
+        env:
+          URL_TO_CAPTURE: 'https://calendar.google.com/calendar/embed?src=family09079405108415767176%40group.calendar.google.com&ctz=America%2FNew_York' 
+        run: npm run render
+
+      - name: Deploy Image to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
