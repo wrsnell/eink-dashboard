@@ -6,7 +6,7 @@ const WIDTH = 800;   // Change to match your display width
 const HEIGHT = 480;  // Change to match your display height
 
 // Array of web page URLs you want to cycle through or capture
-const TARGET_URL = process.env.URL_TO_CAPTURE || 'https://calendar.google.com/calendar/embed?src=family09079405108415767176%40group.calendar.google.com&ctz=America%2FNew_York';
+const TARGET_URL = 'https://calendar.google.com/calendar/embed?src=family09079405108415767176%40group.calendar.google.com&ctz=America%2FNew_York';
 
 (async () => {
   const browser = await puppeteer.launch({
